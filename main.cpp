@@ -165,38 +165,35 @@ void DetectServiceChanges() {
 	CurrentTime(TimeBuffer);
 
 	SC_HANDLE hSCM = OpenSCManager(NULL, NULL, SC_MANAGER_ENUMERATE_SERVICE);
-	if (!hSCM) {
-		wprintf(L"OpenSCManager failed: %d\n", GetLastError());
-		return;
-	}
+	if(hSCM == NULL){ wprintf(L"OpenSCManager failed: %d\n", GetLastError()); return; }
 
 	// 새로운 서비스 탐색
-	for (int i = 0; i < CurrentServiceCount; i++) {
+	for(int i = 0; i < CurrentServiceCount; i++){
 		int found = 0;
-		for (int j = 0; j < PrevServiceCount; j++) {
-			if (wcscmp(CurrentServiceList[i].ServiceName, PrevServiceList[j].ServiceName) == 0) {
+		for(int j = 0; j < PrevServiceCount; j++){
+			if(wcscmp(CurrentServiceList[i].ServiceName, PrevServiceList[j].ServiceName) == 0){
 				found = 1;
 				break;
 			}
 		}
 
-		if (!found) {
+		if(!found){
 			wchar_t Description[1024] = L"No Description";
 			GetServiceDescription(hSCM, CurrentServiceList[i].ServiceName, Description);
 			wprintf(L"[%ls] New Service | Name: %ls | PID: %lu | Description: %ls\n", TimeBuffer, CurrentServiceList[i].ServiceName, CurrentServiceList[i].ServiceStatus.ServiceStatusProcess.dwProcessId, Description);
 		}
 	}
 
-	for (int i = 0; i < PrevServiceCount; i++) {
+	for(int i = 0; i < PrevServiceCount; i++){
 		int found = 0;
-		for (int j = 0; j < CurrentServiceCount; j++) {
+		for(int j = 0; j < CurrentServiceCount; j++){
 			if (wcscmp(PrevServiceList[i].ServiceName, CurrentServiceList[j].ServiceName) == 0) {
 				found = 1;
 				break;
 			}
 		}
 
-		if (!found) {
+		if(!found){
 			wprintf(L"[%ls] Service Terminated | Name: %ls | PID: %lu\n", TimeBuffer, PrevServiceList[i].ServiceName, PrevServiceList[i].ServiceStatus.ServiceStatusProcess.dwProcessId);
 		}
 	}
@@ -204,7 +201,7 @@ void DetectServiceChanges() {
 	CloseServiceHandle(hSCM);
 
 	PrevServiceCount = CurrentServiceCount;
-	for (int i = 0; i < CurrentServiceCount; i++) {
+	for(int i = 0; i < CurrentServiceCount; i++){
 		PrevServiceList[i] = CurrentServiceList[i];  // 구조체 자체 복사
 
 		wcsncpy(PrevServiceList[i].ServiceName, CurrentServiceList[i].ServiceName, MaxLength - 1);
