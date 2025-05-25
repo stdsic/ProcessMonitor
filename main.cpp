@@ -12,10 +12,9 @@
 DWORD PrevProcessList[PROCESSLIST];
 wchar_t PrevProcessNameList[PROCESSLIST][MAX_PATH];
 
-const int MaxLength = 0x100;
 typedef struct tag_ServiceInfo{
 	ENUM_SERVICE_STATUS_PROCESS ServiceStatus;
-	wchar_t ServiceName[MaxLength];  // 문자열을 직접 저장할 배열
+	wchar_t ServiceName[MAX_PATH];
 } SERVICE_INFO;
 SERVICE_INFO PrevServiceList[SERVICELIST];
 
@@ -47,9 +46,8 @@ int GetProcessList(DWORD *ProcessList, wchar_t ProcessNameList[PROCESSLIST][MAX_
 
 			if(!GetModuleBaseName(hProcess, NULL, ProcessNameList[i], MAX_PATH)){
 				if(!GetModuleFileNameEx(hProcess, NULL, ProcessNameList[i], MAX_PATH)){
-					DWORD dwSize;
+					DWORD dwSize = MAX_PATH;
 					if(QueryFullProcessImageName(hProcess, 0, ProcessNameList[i], &dwSize)){
-						// 경로에서 파일명만 추출
 						wchar_t *filename = wcsrchr(ProcessNameList[i], '\\');
 						if (filename) {
 							wcscpy(ProcessNameList[i], filename + 1);
@@ -116,8 +114,8 @@ int GetServiceList(SERVICE_INFO *ServiceList){
 	for(int i=0; i<dwReturn; i++){
 		ServiceList[i].ServiceStatus = ServiceBuffer[i];
 
-		wcsncpy(ServiceList[i].ServiceName, ServiceBuffer[i].lpServiceName, MaxLength - 1);
-		ServiceList[i].ServiceName[MaxLength - 1] = 0;
+		wcsncpy(ServiceList[i].ServiceName, ServiceBuffer[i].lpServiceName, MAX_PATH - 1);
+		ServiceList[i].ServiceName[MAX_PATH - 1] = 0;
 	}
 
 	CloseHandle(hScm);
@@ -167,7 +165,6 @@ void DetectServiceChanges() {
 	SC_HANDLE hSCM = OpenSCManager(NULL, NULL, SC_MANAGER_ENUMERATE_SERVICE);
 	if(hSCM == NULL){ wprintf(L"OpenSCManager failed: %d\n", GetLastError()); return; }
 
-	// 새로운 서비스 탐색
 	for(int i = 0; i < CurrentServiceCount; i++){
 		int found = 0;
 		for(int j = 0; j < PrevServiceCount; j++){
@@ -202,10 +199,10 @@ void DetectServiceChanges() {
 
 	PrevServiceCount = CurrentServiceCount;
 	for(int i = 0; i < CurrentServiceCount; i++){
-		PrevServiceList[i] = CurrentServiceList[i];  // 구조체 자체 복사
+		PrevServiceList[i] = CurrentServiceList[i]; 
 
-		wcsncpy(PrevServiceList[i].ServiceName, CurrentServiceList[i].ServiceName, MaxLength - 1);
-		PrevServiceList[i].ServiceName[MaxLength - 1] = 0;
+		wcsncpy(PrevServiceList[i].ServiceName, CurrentServiceList[i].ServiceName, MAX_PATH - 1);
+		PrevServiceList[i].ServiceName[MAX_PATH - 1] = 0;
 	}
 }
 
