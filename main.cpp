@@ -174,7 +174,6 @@ int wmain(){
 		Sleep(5000);
 		DetectProcessChanges();
 		DetectServiceChanges();
-
 	}
 
 	return 0;
