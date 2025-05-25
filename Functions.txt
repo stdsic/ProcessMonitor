@@ -348,7 +348,16 @@ BOOL QueryServiceConfig2W(
 3. ERROR_INVALID_HANDLE: 지정된 핸들이 잘못되었다.
 
 여기까지 주요 함수를 알아봤는데 사실 온전히 이해하려면 Windows의 보안에 관한 내용을 어느정도 알고있어야 한다.
-진짜 마지막으로 ENUM_SERVICE_STATUS_PROCESS 구조체 타입에 대해 알아보자.
+마지막으로 구조체 타입에 대해 알아보자. 먼저, SERVICE_DESCRIPTION 구조체 타입의 원형은 다음과 같다.
+
+typedef struct _SERVICE_DESCRIPTION {
+	LPWSTR lpDescription;
+} SERVICE_DESCRIPTION, *LPSERVICE_DESCRIPTION;
+
+소개하기 민망할 정도인데 그냥 서비스의 설명을 저장하는 유니코드 문자열 포인터가 포함된 구조체이다.
+서비스가 제공하는 기능이나 목적을 설명하는 문자열이 포함되며 설명이 설정되지 않은 경우 NULL일 수 있다.
+
+이번엔 ENUM_SERVICE_STATUS_PROCESS 구조체 타입에 대해 알아보자.
 
 원형은 다음과 같다.
 typedef struct _ENUM_SERVICE_STATUS_PROCESSW {
