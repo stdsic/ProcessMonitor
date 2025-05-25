@@ -42,6 +42,7 @@ int GetProcessList(DWORD *ProcessList, wchar_t ProcessNameList[PROCESSLIST][MAX_
 				}else{
 					wcscpy(ProcessNameList[i], L"Warning: Unknown Process");
 				}
+				continue;
 			}
 
 			if(!GetModuleBaseName(hProcess, NULL, ProcessNameList[i], MAX_PATH)){
@@ -49,13 +50,15 @@ int GetProcessList(DWORD *ProcessList, wchar_t ProcessNameList[PROCESSLIST][MAX_
 					DWORD dwSize = MAX_PATH;
 					if(QueryFullProcessImageName(hProcess, 0, ProcessNameList[i], &dwSize)){
 						wchar_t *filename = wcsrchr(ProcessNameList[i], '\\');
-						if (filename) {
+						if(filename && (*filename + 1)){
 							wcscpy(ProcessNameList[i], filename + 1);
 						}
-					}else{
-						wcscpy(ProcessNameList[i], L"Warning: Unknown Process");
 					}
 				}
+			}
+
+			if(wcslen(ProcessNameList[i]) == 0){
+				wcscpy(ProcessNameList[i], L"Warning: Unknown Process");
 			}
 
 			CloseHandle(hProcess);
