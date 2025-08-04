@@ -15,7 +15,7 @@ Windows 10 이상<br>
 ### 📥 Installing<br>
 [Releases](https://github.com/stdFrog/ProcessMonitor/releases) 페이지에서 최신 버전을 확인하실 수 있습니다.<br>
 압축 해제 후 `ProcessMonitor.exe` 또는 `ProcessMonitorInstaller.exe`를 실행합니다.<br>
-설치 파일(ProcessMonitor.exe)을 다운로드한 경우 안내에 따라 안전하게 실행 파일(ProcessMonitor.exe)을 설치하시면 됩니다.<br>
+설치 파일(ProcessMonitorInstaller.exe)을 다운로드한 경우 안내에 따라 안전하게 실행 파일(ProcessMonitor.exe)을 설치하시면 됩니다.<br>
 <br>
 ### ▶️ Executing program<br>
 - ProcessMonitor.exe<br>
