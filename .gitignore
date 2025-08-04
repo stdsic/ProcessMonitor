@@ -1,10 +1,9 @@
 # ignore
-*.exe
+My
 *.o
 *.txt
 *.bat
+*.exe
 *.cmd
 *.cpp
 !main.cpp
-!Functions.txt
-!README.txt
